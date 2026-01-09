@@ -29,7 +29,7 @@
 ## 🖼️ Screenshots
 
 <div align="center">
-  <img src="showcase.png" alt="1PDF Application Screenshot" width="800">
+  <img src="public/showcase.png" alt="1PDF Application Screenshot" width="800">
   <p><em>Clean, modern interface for PDF combining</em></p>
 </div>
 
@@ -44,7 +44,7 @@
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/onepdf.git
+   git clone https://github.com/mosaddiqdev/onepdf.git
    cd onepdf
    ```
 
@@ -170,7 +170,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
   <p>Made with ❤️ for better PDF management</p>
   <p>
     <a href="https://1pdf.app">Website</a> •
-    <a href="https://github.com/yourusername/onepdf/issues">Report Bug</a> •
-    <a href="https://github.com/yourusername/onepdf/issues">Request Feature</a>
+    <a href="https://github.com/mosaddiqdev/onepdf/issues">Report Bug</a> •
+    <a href="https://github.com/mosaddiqdev/onepdf/issues">Request Feature</a>
   </p>
 </div>

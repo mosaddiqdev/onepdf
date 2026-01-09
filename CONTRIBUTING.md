@@ -7,7 +7,7 @@ Thank you for your interest in contributing to 1PDF! We welcome contributions fr
 1. **Fork the repository**
 2. **Clone your fork**
    ```bash
-   git clone https://github.com/yourusername/onepdf.git
+   git clone https://github.com/mosaddiqdev/onepdf.git
    cd onepdf
    ```
 3. **Install dependencies**
