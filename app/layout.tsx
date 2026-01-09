@@ -42,14 +42,14 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     title: "1PDF",
   },
-  metadataBase: new URL('https://1pdf.app'),
+  metadataBase: new URL('https://1pdf-app.vercel.app'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     title: "1PDF - Combine PDF Pages",
     description: "Merge multiple PDF pages onto single sheets. Save paper, save ink, save money.",
-    url: 'https://1pdf.app',
+    url: 'https://1pdf-app.vercel.app',
     siteName: '1PDF',
     locale: 'en_US',
     type: 'website',

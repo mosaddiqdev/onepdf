@@ -12,7 +12,7 @@
   [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
   [![PWA](https://img.shields.io/badge/PWA-Ready-purple?style=for-the-badge&logo=pwa)](https://web.dev/progressive-web-apps/)
 
-  [🚀 Live Demo](https://1pdf.app) • [📱 Install as App](#installation)
+  [🚀 Live Demo](https://1pdf-app.vercel.app) • [📱 Install as App](#installation)
 </div>
 
 ## ✨ Features
@@ -169,7 +169,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 <div align="center">
   <p>Made with ❤️ for better PDF management</p>
   <p>
-    <a href="https://1pdf.app">Website</a> •
+    <a href="https://1pdf-app.vercel.app">Website</a> •
     <a href="https://github.com/mosaddiqdev/onepdf/issues">Report Bug</a> •
     <a href="https://github.com/mosaddiqdev/onepdf/issues">Request Feature</a>
   </p>
