@@ -3,7 +3,6 @@
 import { useState, useCallback, useEffect } from 'react'
 import { getPDFPageCount, formatFileSize, generateId } from '@/lib/pdf-processor'
 import { validateFiles, formatValidationErrors, VALIDATION_LIMITS } from '@/lib/validation'
-import { track } from '@vercel/analytics'
 import type { PDFFile } from '@/lib/types'
 
 export function useFileManager() {
@@ -86,19 +85,7 @@ export function useFileManager() {
         return
       }
 
-      setFiles(prev => {
-        const newFileList = [...prev, ...pdfFiles]
-        
-        // Track file upload
-        track('files_uploaded', {
-          fileCount: pdfFiles.length,
-          totalFiles: newFileList.length,
-          totalPages: newFileList.reduce((sum, f) => sum + (f.pageCount || 0), 0),
-          averageFileSize: Math.round(pdfFiles.reduce((sum, f) => sum + f.size, 0) / pdfFiles.length / 1024), // KB
-        })
-        
-        return newFileList
-      })
+      setFiles(prev => [...prev, ...pdfFiles])
     } catch (error) {
       console.error('Error processing files:', error)
       setValidationError(error instanceof Error ? error.message : 'Failed to process files. Please try again.')
