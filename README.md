@@ -29,8 +29,15 @@
 ## 🖼️ Screenshots
 
 <div align="center">
-  <img src="public/showcase.png" alt="1PDF Application Screenshot" width="800">
-  <p><em>Clean, modern interface for PDF combining</em></p>
+  
+### Home Page - File Upload
+<img src="public/showcase.png" alt="1PDF Home Page - Upload Interface" width="800">
+<p><em>Clean, modern interface for uploading and managing PDF files</em></p>
+
+### Combine Page - Processing Interface  
+<img src="public/showcase-combine.png" alt="1PDF Combine Page - Processing Interface" width="800">
+<p><em>Intuitive controls for configuring PDF combination settings</em></p>
+
 </div>
 
 ## 🚀 Quick Start
@@ -167,6 +174,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 <div align="center">
+  <p><strong>Built for students who print lecture notes</strong></p>
   <p>Made with ❤️ for better PDF management</p>
   <p>
     <a href="https://1pdf-app.vercel.app">Website</a> •
