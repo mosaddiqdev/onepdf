@@ -2,7 +2,7 @@
 
 export function GradientBackground() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-20">
       <svg className="absolute w-125 h-125 -top-25 left-[10%]" viewBox="0 0 500 500" fill="none">
         <defs>
           <radialGradient id="blob1" cx="50%" cy="50%" r="50%">
