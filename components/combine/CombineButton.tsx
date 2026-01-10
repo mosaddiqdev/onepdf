@@ -1,15 +1,15 @@
-'use client'
+"use client";
 
 interface CombineButtonProps {
-  totalPages: number
-  outputSheets: number
-  onClick: () => void
-  disabled?: boolean
+  totalPages: number;
+  outputSheets: number;
+  onClick: () => void;
+  disabled?: boolean;
 }
 
 export function CombineButton({ totalPages, outputSheets, onClick, disabled }: CombineButtonProps) {
   return (
-    <div className="fixed bottom-2 sm:bottom-4 left-4 right-4 z-20 max-w-sm sm:max-w-md md:max-w-lg lg:max-w-[640px] mx-auto">
+    <div className="fixed bottom-2 sm:bottom-4 left-4 right-4 z-20 max-w-sm sm:max-w-md md:max-w-lg lg:max-w-160 mx-auto">
       <button
         onClick={onClick}
         disabled={disabled}
@@ -27,11 +27,21 @@ export function CombineButton({ totalPages, outputSheets, onClick, disabled }: C
           </span>
         </div>
         <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-lg group-hover:bg-white/30 group-active:bg-white/40 transition-colors">
-          <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+          <svg
+            className="w-4 h-4 sm:w-5 sm:h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+            />
           </svg>
         </div>
       </button>
     </div>
-  )
+  );
 }

@@ -17,11 +17,7 @@ export const VALIDATION_LIMITS = {
 // PDF magic bytes for file type validation
 const PDF_MAGIC_BYTES = [0x25, 0x50, 0x44, 0x46] // %PDF
 
-export interface ValidationError {
-  type: 'file_size' | 'file_type' | 'file_count' | 'filename' | 'settings' | 'pages'
-  message: string
-  file?: string
-}
+
 
 /**
  * Validate file type by checking magic bytes
@@ -69,7 +65,7 @@ export async function validatePDFFile(file: File): Promise<ValidationError | nul
   try {
     const buffer = await file.slice(0, 4).arrayBuffer()
     const bytes = new Uint8Array(buffer)
-    
+
     for (let i = 0; i < PDF_MAGIC_BYTES.length; i++) {
       if (bytes[i] !== PDF_MAGIC_BYTES[i]) {
         return {
@@ -247,7 +243,7 @@ export function validatePageCount(totalPages: number, pagesPerSheet: number): Va
  */
 export function formatValidationErrors(errors: ValidationError[]): string {
   if (errors.length === 0) return ''
-  
+
   if (errors.length === 1) {
     return errors[0].message
   }

@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { getPDFPageCount, formatFileSize, generateId } from '@/lib/pdf-processor'
 import { validateFiles, formatValidationErrors, VALIDATION_LIMITS } from '@/lib/validation'
-import type { PDFFile } from '@/lib/types'
+
 
 export function useFileManager() {
   const [files, setFiles] = useState<PDFFile[]>([])
@@ -14,8 +14,8 @@ export function useFileManager() {
     const uploadedFiles = (window as any).uploadedFiles
     if (uploadedFiles && Array.isArray(uploadedFiles)) {
       setFiles(uploadedFiles)
-      // Clear the global variable
-      ;(window as any).uploadedFiles = null
+        // Clear the global variable
+        ; (window as any).uploadedFiles = null
     }
   }, [])
 
@@ -35,7 +35,7 @@ export function useFileManager() {
       // Check if adding these files would exceed limits
       const currentTotalSize = files.reduce((sum, f) => sum + f.size, 0)
       const newTotalSize = newFiles.reduce((sum, f) => sum + f.size, 0)
-      
+
       if (currentTotalSize + newTotalSize > VALIDATION_LIMITS.MAX_TOTAL_SIZE) {
         const totalMB = Math.round((currentTotalSize + newTotalSize) / (1024 * 1024))
         const maxMB = Math.round(VALIDATION_LIMITS.MAX_TOTAL_SIZE / (1024 * 1024))
@@ -54,7 +54,7 @@ export function useFileManager() {
           let pageCount: number | undefined
           try {
             pageCount = await getPDFPageCount(file)
-            
+
             // Validate page count
             if (pageCount && pageCount > VALIDATION_LIMITS.MAX_PAGES_PER_FILE) {
               throw new Error(`File "${file.name}" has ${pageCount} pages. Maximum ${VALIDATION_LIMITS.MAX_PAGES_PER_FILE} pages per file allowed.`)

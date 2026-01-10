@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import {
   DndContext,
   closestCenter,
@@ -13,27 +13,26 @@ import {
   DragEndEvent,
   DragOverlay,
   DragStartEvent,
-} from '@dnd-kit/core'
+} from "@dnd-kit/core";
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
-} from '@dnd-kit/sortable'
-import { Button } from '@/components/ui/button'
-import { SortableFileItem } from './SortableFileItem'
-import { EmptyState } from './EmptyState'
-import { useDragState } from '@/hooks/use-drag-state'
-import type { PDFFile } from '@/lib/types'
+} from "@dnd-kit/sortable";
+import { Button } from "@/components/ui/button";
+import { SortableFileItem } from "./SortableFileItem";
+import { EmptyState } from "./EmptyState";
+import { useDragState } from "@/hooks/use-drag-state";
 
 interface FileListCardProps {
-  files: PDFFile[]
-  totalPages: number
-  isProcessing: boolean
-  onFilesAdded: (files: File[]) => void
-  onRemoveFile: (id: string) => void
-  onReorderFiles: (files: PDFFile[]) => void
-  onAddMoreFiles: () => void
+  files: PDFFile[];
+  totalPages: number;
+  isProcessing: boolean;
+  onFilesAdded: (files: File[]) => void;
+  onRemoveFile: (id: string) => void;
+  onReorderFiles: (files: PDFFile[]) => void;
+  onAddMoreFiles: () => void;
 }
 
 export function FileListCard({
@@ -45,8 +44,7 @@ export function FileListCard({
   onReorderFiles,
   onAddMoreFiles,
 }: FileListCardProps) {
-  const { isDragging, onDragStart, onDragEnd, getItemAnimationProps } = useDragState()
-  const activeFile = isDragging ? files.find(file => file.id) : null
+  const { isDragging, onDragStart, onDragEnd, getItemAnimationProps } = useDragState();
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -58,36 +56,35 @@ export function FileListCard({
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
-  )
+  );
 
-  const [activeId, setActiveId] = useState<string | null>(null)
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   const handleDragStart = (event: DragStartEvent) => {
-    setActiveId(event.active.id as string)
-    onDragStart()
-  }
+    setActiveId(event.active.id as string);
+    onDragStart();
+  };
 
   const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event
+    const { active, over } = event;
 
     if (active.id !== over?.id) {
-      const oldIndex = files.findIndex(item => item.id === active.id)
-      const newIndex = files.findIndex(item => item.id === over?.id)
-      onReorderFiles(arrayMove(files, oldIndex, newIndex))
+      const oldIndex = files.findIndex((item) => item.id === active.id);
+      const newIndex = files.findIndex((item) => item.id === over?.id);
+      onReorderFiles(arrayMove(files, oldIndex, newIndex));
     }
 
-    setActiveId(null)
-    onDragEnd()
-  }
+    setActiveId(null);
+    onDragEnd();
+  };
 
-  const activeDragFile = files.find(file => file.id === activeId)
+  const activeDragFile = files.find((file) => file.id === activeId);
 
   return (
     <div className="rounded-xl border border-border bg-card overflow-hidden">
-      {/* Header */}
       <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3 border-b border-border bg-muted/30">
         <span className="text-sm font-medium">
-          {files.length === 0 ? 'No files' : `${files.length} file${files.length !== 1 ? 's' : ''}`}
+          {files.length === 0 ? "No files" : `${files.length} file${files.length !== 1 ? "s" : ""}`}
         </span>
         <div className="flex items-center gap-2 sm:gap-4">
           <span className="text-xs text-muted-foreground">
@@ -110,37 +107,44 @@ export function FileListCard({
             disabled={isProcessing}
             className="h-6 sm:h-7 px-1.5 sm:px-2 text-xs"
           >
-            <svg className="w-3 h-3 mr-0.5 sm:mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg
+              className="w-3 h-3 mr-0.5 sm:mr-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
             </svg>
-            <span className="hidden sm:inline">{files.length === 0 ? 'Add Files' : 'Add More'}</span>
+            <span className="hidden sm:inline">
+              {files.length === 0 ? "Add Files" : "Add More"}
+            </span>
             <span className="sm:hidden">Add</span>
           </Button>
         </div>
       </div>
 
-      {/* File List or Empty State */}
       <motion.div layout className="relative">
         <AnimatePresence mode="popLayout" initial={false}>
           {files.length > 0 ? (
-            <motion.div
-              key="file-list"
-              layout
-            >
+            <motion.div key="file-list" layout>
               <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
               >
-                <SortableContext items={files.map(f => f.id)} strategy={verticalListSortingStrategy}>
+                <SortableContext
+                  items={files.map((f) => f.id)}
+                  strategy={verticalListSortingStrategy}
+                >
                   <div>
                     <AnimatePresence initial={false} mode="sync">
                       {files.map((file) => (
                         <motion.div
                           key={file.id}
                           {...getItemAnimationProps}
-                          style={{ overflow: isDragging ? 'visible' : 'hidden' }}
+                          style={{ overflow: isDragging ? "visible" : "hidden" }}
                         >
                           <SortableFileItem
                             file={file}
@@ -182,5 +186,5 @@ export function FileListCard({
         </AnimatePresence>
       </motion.div>
     </div>
-  )
+  );
 }

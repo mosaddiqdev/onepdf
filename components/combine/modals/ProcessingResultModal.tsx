@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/drawer'
 import { ProcessingContent } from './ProcessingContent'
 import { ResultContent } from './ResultContent'
-import type { ProcessingState } from '@/lib/types'
+
 
 interface ProcessingResultModalProps {
   isOpen: boolean

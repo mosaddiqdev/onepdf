@@ -4,7 +4,8 @@ import { useState, useCallback, useEffect, useRef } from 'react'
 import { processPDFs, downloadPDF, cancelProcessing as cancelWorker } from '@/lib/pdf-processor'
 import { validateSettings, validatePageCount, sanitizeFilename, formatValidationErrors } from '@/lib/validation'
 import { getRandomFact } from '@/lib/fun-facts'
-import type { PDFFile, ProcessingSettings, ProcessingState } from '@/lib/types'
+import { useBackgroundNotifications } from './use-background-notifications'
+
 
 const DEFAULT_SETTINGS: ProcessingSettings = {
   filename: '',
@@ -13,32 +14,31 @@ const DEFAULT_SETTINGS: ProcessingSettings = {
   grayscale: true,
   invertColors: true,
   blackBackground: false,
+  enableNotifications: true, // Default to enabled
 }
 
-// Load settings from localStorage
+
+
 const loadSettings = (): ProcessingSettings => {
   if (typeof window === 'undefined') return DEFAULT_SETTINGS
-  
+
   try {
     const saved = localStorage.getItem('pdf-processing-settings')
     if (saved) {
       const parsed = JSON.parse(saved)
-      // Merge with defaults to handle new settings
-      return { ...DEFAULT_SETTINGS, ...parsed, filename: '' } // Always reset filename
+      return { ...DEFAULT_SETTINGS, ...parsed, filename: '' }
     }
   } catch (error) {
     console.warn('Failed to load settings from localStorage:', error)
   }
-  
+
   return DEFAULT_SETTINGS
 }
 
-// Save settings to localStorage
 const saveSettings = (settings: ProcessingSettings) => {
   if (typeof window === 'undefined') return
-  
+
   try {
-    // Don't save filename
     const { filename, ...settingsToSave } = settings
     localStorage.setItem('pdf-processing-settings', JSON.stringify(settingsToSave))
   } catch (error) {
@@ -46,19 +46,141 @@ const saveSettings = (settings: ProcessingSettings) => {
   }
 }
 
+const saveProcessingState = (state: EnhancedProcessingState) => {
+  if (typeof window === 'undefined' || state.status === 'idle') return
+
+  try {
+    localStorage.setItem('pdf-processing-state', JSON.stringify({
+      ...state,
+      timestamp: Date.now()
+    }))
+  } catch (error) {
+    console.warn('Failed to save processing state:', error)
+  }
+}
+
+const loadProcessingState = (): EnhancedProcessingState | null => {
+  if (typeof window === 'undefined') return null
+
+  try {
+    const saved = localStorage.getItem('pdf-processing-state')
+    if (saved) {
+      const parsed = JSON.parse(saved)
+      if (Date.now() - parsed.timestamp < 3600000) {
+        const { timestamp, ...state } = parsed
+        return state
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to load processing state:', error)
+  }
+
+  return null
+}
+
+const clearProcessingState = () => {
+  if (typeof window === 'undefined') return
+  try {
+    localStorage.removeItem('pdf-processing-state')
+  } catch (error) {
+    console.warn('Failed to clear processing state:', error)
+  }
+}
+
 export function useProcessing(files: PDFFile[]) {
   const [settings, setSettings] = useState<ProcessingSettings>(loadSettings)
-  const [state, setState] = useState<ProcessingState>({ status: 'idle', progress: 0, message: '' })
+  const [state, setState] = useState<EnhancedProcessingState>({ status: 'idle', progress: 0, message: '' })
   const [result, setResult] = useState<Uint8Array | null>(null)
   const [currentFact, setCurrentFact] = useState('')
+  const [isVisible, setIsVisible] = useState(() => {
+    return typeof document === 'undefined' ? true : !document.hidden
+  })
+
   const abortControllerRef = useRef<AbortController | null>(null)
+  const processingStartTime = useRef<number>(0)
+  const lastNotificationTime = useRef<number>(0)
+  const isBackgroundRef = useRef<boolean>(false)
+
+  const { notifyProcessingComplete, notifyProcessingError, notifyLongProcessing } = useBackgroundNotifications()
 
   const isProcessing = state.status === 'processing'
   const outputSheets = Math.ceil(
     files.reduce((sum, f) => sum + (f.pageCount || 0), 0) / settings.pagesPerSheet
   )
 
-  // Update filename when files change (always use first file's name)
+  // Page Visibility API integration
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+
+    const handleVisibilityChange = () => {
+      const visible = !document.hidden
+      // console.log('Visibility changed:', { visible, isProcessing, currentState: state.status })
+      setIsVisible(visible)
+
+      if (isProcessing) {
+        if (!visible) {
+          // console.log('Tab hidden during processing - switching to background mode')
+          isBackgroundRef.current = true
+          setState(prev => ({
+            ...prev,
+            isBackground: true,
+            backgroundStartTime: Date.now(),
+            message: prev.message.includes('(Running in background...)')
+              ? prev.message
+              : prev.message + ' (Running in background...)'
+          }))
+        } else {
+          console.log('Tab visible again - switching to foreground mode')
+          isBackgroundRef.current = false
+          setState(prev => ({
+            ...prev,
+            isBackground: false,
+            message: prev.message.replace(' (Running in background...)', '')
+          }))
+        }
+      }
+    }
+
+    setIsVisible(!document.hidden)
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    window.addEventListener('focus', () => {
+      if (document.hidden === false) handleVisibilityChange()
+    })
+    window.addEventListener('blur', () => {
+      if (document.hidden === true) handleVisibilityChange()
+    })
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('focus', handleVisibilityChange)
+      window.removeEventListener('blur', handleVisibilityChange)
+    }
+  }, [isProcessing, state.status])
+
+  // Restore processing state on mount
+  useEffect(() => {
+    const savedState = loadProcessingState()
+    if (savedState && files.length > 0) {
+      if (savedState.status === 'processing') {
+        setState({
+          status: 'error',
+          progress: 0,
+          message: 'Previous processing was interrupted. Please try again.'
+        })
+      }
+    }
+  }, [files.length])
+
+  useEffect(() => {
+    if (state.status !== 'idle') {
+      saveProcessingState(state)
+    } else {
+      clearProcessingState()
+    }
+  }, [state])
+
   useEffect(() => {
     if (files.length > 0) {
       const firstName = files[0].name.replace(/\.pdf$/i, '')
@@ -68,12 +190,40 @@ export function useProcessing(files: PDFFile[]) {
     }
   }, [files])
 
-  // Generate random fact when processing starts
   useEffect(() => {
     if (isProcessing) {
       setCurrentFact(getRandomFact())
     }
   }, [isProcessing])
+
+  useEffect(() => {
+    if (!isProcessing || state.progress <= 0) return
+
+    const elapsed = Date.now() - processingStartTime.current
+    const estimatedTotal = (elapsed / state.progress) * 100
+    const remaining = estimatedTotal - elapsed
+
+    const currentEstimate = state.estimatedTimeRemaining || 0
+    const timeDiff = Math.abs(remaining - currentEstimate)
+
+    if (timeDiff > 5000) {
+      setState(prev => ({
+        ...prev,
+        estimatedTimeRemaining: Math.max(0, remaining)
+      }))
+    }
+
+    if (state.isBackground && remaining > 0 && settings.enableNotifications) {
+      const now = Date.now()
+      const timeSinceLastNotification = now - lastNotificationTime.current
+
+      if (timeSinceLastNotification > 300000 && remaining > 600000) {
+        const estimatedMinutes = Math.ceil(remaining / 60000)
+        notifyLongProcessing(estimatedMinutes)
+        lastNotificationTime.current = now
+      }
+    }
+  }, [isProcessing, state.progress, state.isBackground, state.estimatedTimeRemaining, notifyLongProcessing])
 
   const updateFilename = useCallback((filename: string) => {
     setSettings(prev => ({ ...prev, filename }))
@@ -89,65 +239,111 @@ export function useProcessing(files: PDFFile[]) {
 
   const process = useCallback(async () => {
     if (files.length === 0) return
-    
-    // Validate settings before processing
+
     const settingsErrors = validateSettings(settings)
     if (settingsErrors.length > 0) {
-      setState({ 
-        status: 'error', 
-        progress: 0, 
-        message: formatValidationErrors(settingsErrors) 
+      setState({
+        status: 'error',
+        progress: 0,
+        message: formatValidationErrors(settingsErrors)
       })
       return
     }
 
-    // Validate page count
     const totalPages = files.reduce((sum, f) => sum + (f.pageCount || 0), 0)
     const pageCountError = validatePageCount(totalPages, settings.pagesPerSheet)
     if (pageCountError) {
-      setState({ 
-        status: 'error', 
-        progress: 0, 
-        message: pageCountError.message 
+      setState({
+        status: 'error',
+        progress: 0,
+        message: pageCountError.message
       })
       return
     }
 
-    // Sanitize filename
     const sanitizedFilename = sanitizeFilename(settings.filename)
     if (sanitizedFilename !== settings.filename) {
       setSettings(prev => ({ ...prev, filename: sanitizedFilename }))
     }
-    
-    // Create new abort controller for this processing run
+
+    if (totalPages > 100) {
+      console.log(`Processing ${totalPages} pages - this may take 10-30 minutes`)
+    }
+
     abortControllerRef.current = new AbortController()
     const signal = abortControllerRef.current.signal
-    const startTime = Date.now()
-    
-    setState({ status: 'processing', progress: 0, message: 'Starting...' })
+    processingStartTime.current = Date.now()
+    lastNotificationTime.current = Date.now()
+
+    setState({
+      status: 'processing',
+      progress: 0,
+      message: 'Starting...',
+      isBackground: !isVisible,
+      backgroundStartTime: !isVisible ? Date.now() : undefined
+    })
+    isBackgroundRef.current = !isVisible
     setResult(null)
-    
+
     try {
       const res = await processPDFs(files, settings, (progress, message) => {
-        setState({ status: 'processing', progress, message })
+        setState(prev => ({
+          ...prev,
+          progress,
+          message: message + (prev.isBackground ? ' (Running in background...)' : '')
+        }))
       }, signal)
+
+      const wasInBackground = isBackgroundRef.current
+      console.log('[Processing] Completed! wasInBackground:', wasInBackground)
+
       setResult(res)
-      setState({ status: 'complete', progress: 100, message: 'Done!' })
+      setState(prev => ({
+        ...prev,
+        status: 'complete',
+        progress: 100,
+        message: 'Done!',
+        isBackground: false
+      }))
+      isBackgroundRef.current = false
+
+      if (wasInBackground && settings.enableNotifications) {
+        console.log('[Processing] Calling notifyProcessingComplete')
+        notifyProcessingComplete(settings.filename || 'combined.pdf', outputSheets)
+      } else {
+        console.log('[Processing] Not calling notification - was not in background or notifications disabled')
+      }
+
+      clearProcessingState()
+
     } catch (e) {
-      // Don't show error if cancelled
       if (e instanceof Error && e.message === 'Cancelled') {
+        clearProcessingState()
         return
       }
       console.error('Processing error:', e)
-      setState({ 
-        status: 'error', 
-        progress: 0, 
-        message: e instanceof Error ? e.message : 'An unexpected error occurred during processing' 
+      const errorMessage = e instanceof Error ? e.message : 'An unexpected error occurred during processing'
+
+      const wasInBackground = isBackgroundRef.current
+      console.log('[Processing] Error occurred! wasInBackground:', wasInBackground)
+
+      setState({
+        status: 'error',
+        progress: 0,
+        message: errorMessage
       })
+      isBackgroundRef.current = false
+
+      if (wasInBackground && settings.enableNotifications) {
+        console.log('[Processing] Calling notifyProcessingError')
+        notifyProcessingError(errorMessage)
+      } else {
+        console.log('[Processing] Not calling error notification - was not in background or notifications disabled')
+      }
     } finally {
       abortControllerRef.current = null
     }
-  }, [files, settings])
+  }, [files, settings, isVisible, state.isBackground, notifyProcessingComplete, notifyProcessingError, outputSheets])
 
   const handleDownload = useCallback(() => {
     if (result) {
@@ -156,23 +352,21 @@ export function useProcessing(files: PDFFile[]) {
   }, [result, settings.filename])
 
   const cancelProcessing = useCallback(() => {
-    // Abort the processing
     if (abortControllerRef.current) {
       abortControllerRef.current.abort()
       abortControllerRef.current = null
     }
-    // Also terminate any active worker
     cancelWorker()
-    // Reset state
     setState({ status: 'idle', progress: 0, message: '' })
     setResult(null)
+    clearProcessingState()
   }, [])
 
   const reset = useCallback(() => {
     setResult(null)
     setState({ status: 'idle', progress: 0, message: '' })
-    // Reset only filename, preserve other user settings
     setSettings(prev => ({ ...prev, filename: '' }))
+    clearProcessingState()
   }, [])
 
   return {
@@ -182,6 +376,7 @@ export function useProcessing(files: PDFFile[]) {
     currentFact,
     isProcessing,
     outputSheets,
+    isVisible,
     updateFilename,
     updateSettings,
     process,

@@ -1,105 +1,148 @@
 # 1PDF
 
 <div align="center">
-  <img src="public/web-app-manifest-512x512.png" alt="1PDF Logo" width="120" height="120">
+  <img src="public/icons/web-app-manifest-512x512.png" alt="1PDF Logo" width="120" height="120">
   
-  **Combine PDF Pages | Save Paper | Save Money**
+  ### **Combine PDF Pages | Save Paper | Save Money**
   
-  A modern web application for merging multiple PDF pages onto single sheets, built for students and professionals who want to optimize their printing.
+  <p><em>A modern web application for merging multiple PDF pages onto single sheets, built for students and professionals who want to optimize their printing.</em></p>
 
-  [![Next.js](https://img.shields.io/badge/Next.js-16.1.1-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-  [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
-  [![PWA](https://img.shields.io/badge/PWA-Ready-purple?style=for-the-badge&logo=pwa)](https://web.dev/progressive-web-apps/)
+  <p>
+    <img src="https://img.shields.io/badge/Next.js-16.1.1-black?style=for-the-badge&logo=next.js" alt="Next.js">
+    <img src="https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript" alt="TypeScript">
+    <img src="https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css" alt="Tailwind CSS">
+    <img src="https://img.shields.io/badge/PWA-Ready-purple?style=for-the-badge&logo=pwa" alt="PWA">
+  </p>
 
-  [🚀 Live Demo](https://1pdf-app.vercel.app) • [📱 Install as App](#installation)
+  <p>
+    <a href="https://1pdf-app.vercel.app"><img src="https://img.shields.io/badge/Live_Demo-Visit_Now-success?style=for-the-badge" alt="Live Demo"></a>
+    <a href="#pwa-installation"><img src="https://img.shields.io/badge/Install-As_App-blueviolet?style=for-the-badge" alt="Install as App"></a>
+  </p>
 </div>
+
+---
+
+## 💡 Why 1PDF?
+
+<table>
+<tr>
+<td width="50%">
+
+### **Perfect For**
+
+- 🎓 **Students** printing lecture notes
+- 💼 **Professionals** optimizing documents
+- 🏢 **Offices** reducing paper costs
+- 🌱 **Eco-conscious** users saving trees
+
+</td>
+<td width="50%">
+
+### **Key Benefits**
+
+- 💰 **Save up to 75% on printing costs**
+- 🔒 **100% private** - no file uploads
+- ⚡ **Lightning fast** browser processing
+- 📡 **Works offline** as PWA
+
+</td>
+</tr>
+</table>
 
 ## ✨ Features
 
-- **📄 PDF Combining** - Merge multiple PDF pages onto single sheets (2, 4, 6, or 8 pages per sheet)
-- **🎨 Visual Customization** - Apply grayscale filters and color inversion
-- **📱 Progressive Web App** - Install on any device for offline-like experience
-- **🖱️ Drag & Drop Interface** - Intuitive file management with reordering
-- **⚡ Client-Side Processing** - All processing happens in your browser - no uploads
-- **🔒 Privacy First** - Your files never leave your device
-- **📊 Quality Control** - Adjustable DPI settings (72-300 DPI)
-- **💾 Instant Download** - Get your combined PDF immediately
+<details>
+<summary><b>Core Features</b></summary>
 
-## 🖼️ Screenshots
+- 📄 **Smart PDF Combining** - Merge 3 pages per sheet
+- 🎨 **Visual Customization** - Apply grayscale, color inversion, and background options
+- 🎯 **Quality Control** - Adjustable DPI settings (150-300 DPI) for perfect print quality
+- 🔄 **Drag & Drop Interface** - Intuitive file management with reordering capabilities
+- ⚙️ **Real-time Processing** - Instant preview and processing feedback
+
+</details>
+
+<details>
+<summary><b>Privacy & Security</b></summary>
+
+- 🛡️ **Privacy First** - All processing happens locally in your browser
+- 🚫 **No Uploads** - Your files never leave your device
+- ✅ **Secure** - No server-side storage or data collection
+- 🌐 **Offline Ready** - Works without internet connection when installed
+
+</details>
+
+<details>
+<summary><b>Progressive Web App</b></summary>
+
+- 📱 **Install on Any Device** - Works on desktop, mobile, and tablet
+- 🎭 **App-like Experience** - Native feel with smooth animations
+- 🔄 **Background Processing** - Continue processing when switching tabs
+- 🔔 **Smart Notifications** - Get notified when processing completes
+- 📴 **Offline Support** - Use the app without internet connection
+
+</details>
+
+## 📸 Screenshots
 
 <div align="center">
-  
-### Desktop Experience
-<img src="public/showcase.png" alt="1PDF Home Page - Upload Interface" width="400"> <img src="public/showcase-combine.png" alt="1PDF Combine Page - Processing Interface" width="400">
 
-*Clean, modern interface for uploading and managing PDF files* | *Intuitive controls for configuring PDF combination settings*
+### **Desktop Experience**
 
-### Mobile Experience
-<img src="public/showcase-mobile.png" alt="1PDF Mobile Interface" width="800">
-<p><em>Responsive design optimized for mobile devices and touch interactions</em></p>
+<table>
+<tr>
+<td align="center">
+<img src="public/images/showcase.png" alt="1PDF Home Page - Upload Interface" width="400">
+<br><em>Clean, modern interface for uploading PDF files</em>
+</td>
+<td align="center">
+<img src="public/images/showcase-combine.png" alt="1PDF Combine Page - Processing Interface" width="400">
+<br><em>Intuitive controls for configuring PDF settings</em>
+</td>
+</tr>
+</table>
+
+### **Mobile Experience**
+
+<img src="public/images/showcase-mobile.png" alt="1PDF Mobile Interface" width="600">
+<br><em>Responsive design optimized for mobile devices and touch interactions</em>
 
 </div>
 
 ## 🚀 Quick Start
 
-### Prerequisites
+<details>
+<summary><b>Prerequisites</b></summary>
 
-- Node.js 18+ or Bun
-- Modern web browser with PDF support
+- **Node.js 18+** or **Bun** runtime
+- **Modern web browser** with PDF support (Chrome, Firefox, Safari, Edge)
 
-### Installation
+</details>
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/mosaddiqdev/onepdf.git
-   cd onepdf
-   ```
+### **Installation**
 
-2. **Install dependencies**
-   ```bash
-   bun install
-   # or
-   npm install
-   ```
+```bash
+# Clone the repository
+git clone https://github.com/mosaddiqdev/onepdf.git
+cd onepdf
 
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env.local
-   ```
+# Install dependencies
+bun install
+# or npm install
 
-4. **Start development server**
-   ```bash
-   bun run dev
-   # or
-   npm run dev
-   ```
+# Set up environment variables
+cp .env.example .env.local
 
-5. **Open your browser**
-   ```
-   http://localhost:3000
-   ```
+# Start development server
+bun run dev
+# or npm run dev
 
-## 🛠️ Built With
+# Open your browser
+# http://localhost:3000
+```
 
-- **[Next.js 16](https://nextjs.org/)** - React framework with App Router
-- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript
-- **[Tailwind CSS 4](https://tailwindcss.com/)** - Utility-first CSS framework
-- **[PDF-lib](https://pdf-lib.js.org/)** - PDF manipulation library
-- **[PDF.js](https://mozilla.github.io/pdf.js/)** - PDF rendering engine
-- **[Framer Motion](https://www.framer.com/motion/)** - Animation library
-- **[React Dropzone](https://react-dropzone.js.org/)** - File upload component
-- **[Sonner](https://sonner.emilkowal.ski/)** - Toast notifications
-
-## 📱 PWA Installation
-
-1PDF can be installed as a Progressive Web App on any device:
-
-- **Desktop**: Look for the install icon in your browser's address bar
-- **Mobile**: Use "Add to Home Screen" from your browser menu
-- **Automatic**: The app will prompt you to install after 30 seconds
-
-## 🔧 Configuration
+<details>
+<summary><b>Configuration Options</b></summary>
 
 Environment variables can be configured in `.env.local`:
 
@@ -117,69 +160,163 @@ NEXT_PUBLIC_PROCESSING_TIMEOUT=1800000
 NEXT_PUBLIC_FILE_LOAD_TIMEOUT=60000
 ```
 
-## 🏗️ Project Structure
+</details>
+
+## 📱 PWA Installation
+
+<div align="center">
+
+### **Install 1PDF as an App**
+
+<table>
+<tr>
+<td align="center" width="33%">
+<h4>Desktop</h4>
+Look for the install icon in your browser's address bar
+</td>
+<td align="center" width="33%">
+<h4>Mobile</h4>
+Use "Add to Home Screen" from your browser menu
+</td>
+<td align="center" width="33%">
+<h4>Automatic</h4>
+The app will prompt you to install after 30 seconds
+</td>
+</tr>
+</table>
+
+</div>
+
+## 🛠️ Built With
+
+<div align="center">
+
+|    **Category**    |                  **Technology**                  |            **Purpose**            |
+| :----------------: | :----------------------------------------------: | :-------------------------------: |
+|   **Framework**    |        [Next.js 16](https://nextjs.org/)         |  React framework with App Router  |
+|    **Language**    |  [TypeScript](https://www.typescriptlang.org/)   |       Type-safe JavaScript        |
+|    **Styling**     |    [Tailwind CSS 4](https://tailwindcss.com/)    |    Utility-first CSS framework    |
+| **PDF Processing** |        [PDF-lib](https://pdf-lib.js.org/)        |     PDF manipulation library      |
+| **PDF Rendering**  |   [PDF.js](https://mozilla.github.io/pdf.js/)    |  Mozilla's PDF rendering engine   |
+|   **Animations**   | [Framer Motion](https://www.framer.com/motion/)  | Smooth animations and transitions |
+|  **File Upload**   | [React Dropzone](https://react-dropzone.js.org/) |      Drag & drop file upload      |
+| **Notifications**  |     [Sonner](https://sonner.emilkowal.ski/)      |   Beautiful toast notifications   |
+
+</div>
+
+<details>
+<summary><b>Project Structure</b></summary>
 
 ```
 onepdf/
 ├── app/                    # Next.js App Router
 │   ├── combine/           # PDF combining page
-│   ├── layout.tsx         # Root layout
-│   └── page.tsx          # Home page
+│   ├── layout.tsx         # Root layout with PWA setup
+│   └── page.tsx          # Landing page
 ├── components/            # React components
 │   ├── combine/          # Combine-specific components
-│   ├── ui/               # Reusable UI components
-│   └── pwa/              # PWA components
+│   ├── ui/               # Reusable UI components (shadcn/ui)
+│   └── pwa/              # PWA components & install prompts
 ├── hooks/                # Custom React hooks
-├── lib/                  # Utility functions
-│   ├── pdf-processor.ts  # PDF processing logic
-│   ├── validation.ts     # Input validation
+│   ├── use-processing.ts # PDF processing logic
+│   ├── use-file-manager.ts # File management
+│   └── use-background-notifications.ts # PWA notifications
+├── lib/                  # Utility functions & core logic
+│   ├── pdf-processor.ts  # Main PDF processing engine
+│   ├── pdf-render.worker.ts # Web Worker for background processing
+│   ├── validation.ts     # Input validation & sanitization
 │   └── utils.ts         # General utilities
 └── public/               # Static assets
+    ├── icons/           # PWA icons & favicons
+    ├── images/          # Screenshots & showcase images
+    └── pdfjs/           # PDF.js worker & WASM files
 ```
 
-## 🚀 Deployment
+</details>
 
-### Vercel (Recommended)
+## 🚢 Deployment
 
-1. Push your code to GitHub
-2. Connect your repository to [Vercel](https://vercel.com)
-3. Deploy automatically on every push
+<details>
+<summary><b>Vercel (Recommended)</b></summary>
 
-### Other Platforms
+1. **Push your code** to GitHub
+2. **Connect your repository** to [Vercel](https://vercel.com)
+3. **Deploy automatically** on every push
 
-See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions for:
-- Netlify
-- Docker
-- Self-hosted servers
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/mosaddiqdev/onepdf)
+
+</details>
+
+<details>
+<summary><b>Other Deployment Options</b></summary>
+
+- **Netlify** - Connect GitHub repo for automatic deployments
+- **Docker** - Use the included Dockerfile for containerized deployment
+- **Self-hosted** - Deploy on any Node.js hosting provider
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
+
+</details>
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+<div align="center">
 
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+**We welcome contributions from the community!**
 
-## 📄 License
+<table>
+<tr>
+<td align="center">
+<h4>Bug Reports</h4>
+Found an issue? Let us know!
+</td>
+<td align="center">
+<h4>Feature Requests</h4>
+Have an idea? We'd love to hear it!
+</td>
+<td align="center">
+<h4>Code Contributions</h4>
+Want to contribute code? Awesome!
+</td>
+</tr>
+</table>
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+</div>
 
-## 🙏 Acknowledgments
+<details>
+<summary><b>How to Contribute</b></summary>
 
-- Built with modern web technologies
-- Inspired by the need for efficient PDF printing
-- Designed for students and professionals
+1. **Fork the project**
+2. **Create your feature branch** (`git checkout -b feature/AmazingFeature`)
+3. **Commit your changes** (`git commit -m 'Add some AmazingFeature'`)
+4. **Push to the branch** (`git push origin feature/AmazingFeature`)
+5. **Open a Pull Request**
+
+</details>
+
+## License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+### **Bug Reports & Community Feedback**
+
+- **[Raghav Sharma](https://github.com/raghav-sharma)** - Identified critical background processing issue where PDF combining would stop when switching browser tabs. This valuable feedback led to implementing a robust Web Worker + OffscreenCanvas architecture for uninterrupted background processing.
+
+<div align="center">
 
 ---
 
-<div align="center">
-  <p><strong>Built for students who print lecture notes</strong></p>
-  <p>Made with ❤️ for better PDF management</p>
-  <p>
-    <a href="https://1pdf-app.vercel.app">Website</a> •
-    <a href="https://github.com/mosaddiqdev/onepdf/issues">Report Bug</a> •
-    <a href="https://github.com/mosaddiqdev/onepdf/issues">Request Feature</a>
-  </p>
+### **⭐ this repo if you find it useful!**
+
+<p>
+  <a href="https://1pdf-app.vercel.app">Website</a> •
+  <a href="https://github.com/mosaddiqdev/onepdf/issues">Report Bug</a> •
+  <a href="https://github.com/mosaddiqdev/onepdf/issues">Request Feature</a> •
+  <a href="https://github.com/mosaddiqdev/onepdf/discussions">Discussions</a>
+</p>
+
+**Built for students who print lecture notes**
+
 </div>

@@ -33,6 +33,24 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // WASM files headers for PDF.js OpenJPEG support
+      {
+        source: '/(.*)\\.wasm',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/wasm',
+          },
+          {
+            key: 'Cross-Origin-Embedder-Policy',
+            value: 'require-corp',
+          },
+          {
+            key: 'Cross-Origin-Opener-Policy',
+            value: 'same-origin',
+          },
+        ],
+      },
     ]
   },
 };

@@ -1,6 +1,6 @@
 'use client'
 
-import { usePWA } from './PWAProvider'
+import { useState, useEffect } from 'react'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Download01Icon } from '@hugeicons/core-free-icons'
 import { Button } from '@/components/ui/button'
@@ -10,16 +10,63 @@ interface InstallButtonProps {
     size?: 'default' | 'sm' | 'lg' | 'icon'
 }
 
-export function InstallButton({ variant = 'default', size = 'default' }: InstallButtonProps) {
-    const { isInstallable, isInstalled, installApp } = usePWA()
+interface BeforeInstallPromptEvent extends Event {
+    prompt(): Promise<void>
+    userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
+}
 
-    if (isInstalled || !isInstallable) {
+export function InstallButton({ variant = 'default', size = 'default' }: InstallButtonProps) {
+    const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
+    const [isInstalled, setIsInstalled] = useState(false)
+
+    useEffect(() => {
+        // Check if already installed
+        if (typeof window !== 'undefined') {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                || (window.navigator as Navigator & { standalone?: boolean }).standalone === true
+            setIsInstalled(isStandalone)
+        }
+
+        const handleBeforeInstallPrompt = (e: Event) => {
+            e.preventDefault()
+            setDeferredPrompt(e as BeforeInstallPromptEvent)
+        }
+
+        const handleAppInstalled = () => {
+            setIsInstalled(true)
+            setDeferredPrompt(null)
+        }
+
+        if (typeof window !== 'undefined') {
+            window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+            window.addEventListener('appinstalled', handleAppInstalled)
+
+            return () => {
+                window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+                window.removeEventListener('appinstalled', handleAppInstalled)
+            }
+        }
+    }, [])
+
+    const handleInstall = async () => {
+        if (!deferredPrompt) return
+
+        try {
+            await deferredPrompt.prompt()
+            const { outcome } = await deferredPrompt.userChoice
+            setDeferredPrompt(null)
+        } catch (error) {
+            console.error('Install prompt error:', error)
+        }
+    }
+
+    if (isInstalled || !deferredPrompt) {
         return null
     }
 
     return (
         <Button
-            onClick={installApp}
+            onClick={handleInstall}
             variant={variant}
             size={size}
             className="inline-flex items-center gap-2"

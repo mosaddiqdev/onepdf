@@ -1,8 +1,8 @@
-import { forwardRef } from 'react'
-import { cn } from '@/lib/utils'
+import { forwardRef } from "react";
+import { cn } from "@/lib/utils";
 
 interface CustomInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  suffix?: string
+  suffix?: string;
 }
 
 const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
@@ -13,10 +13,10 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
           <input
             ref={ref}
             className={cn(
-              'flex-1 h-10 sm:h-11 px-3 sm:px-4 py-2 sm:py-3 text-sm bg-card border-0',
-              'transition-all duration-200 outline-none',
-              'placeholder:text-muted-foreground',
-              'disabled:opacity-50 disabled:cursor-not-allowed',
+              "flex-1 h-10 sm:h-11 px-3 sm:px-4 py-2 sm:py-3 text-sm bg-card border-0",
+              "transition-all duration-200 outline-none",
+              "placeholder:text-muted-foreground",
+              "disabled:opacity-50 disabled:cursor-not-allowed",
               className
             )}
             {...props}
@@ -25,26 +25,26 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
             {suffix}
           </div>
         </div>
-      )
+      );
     }
 
     return (
       <input
         ref={ref}
         className={cn(
-          'w-full h-11 px-4 py-3 text-sm bg-card border border-border rounded-xl',
-          'transition-all duration-200 outline-none',
-          'focus:ring-2 focus:ring-primary/30 focus:border-transparent',
-          'placeholder:text-muted-foreground',
-          'disabled:opacity-50 disabled:cursor-not-allowed',
+          "w-full h-11 px-4 py-3 text-sm bg-card border border-border rounded-xl",
+          "transition-all duration-200 outline-none",
+          "focus:ring-2 focus:ring-primary/30 focus:border-transparent",
+          "placeholder:text-muted-foreground",
+          "disabled:opacity-50 disabled:cursor-not-allowed",
           className
         )}
         {...props}
       />
-    )
+    );
   }
-)
+);
 
-CustomInput.displayName = 'CustomInput'
+CustomInput.displayName = "CustomInput";
 
-export { CustomInput }
+export { CustomInput };
