@@ -30,13 +30,14 @@
 
 <div align="center">
   
-### Home Page - File Upload
-<img src="public/showcase.png" alt="1PDF Home Page - Upload Interface" width="800">
-<p><em>Clean, modern interface for uploading and managing PDF files</em></p>
+### Desktop Experience
+<img src="public/showcase.png" alt="1PDF Home Page - Upload Interface" width="400"> <img src="public/showcase-combine.png" alt="1PDF Combine Page - Processing Interface" width="400">
 
-### Combine Page - Processing Interface  
-<img src="public/showcase-combine.png" alt="1PDF Combine Page - Processing Interface" width="800">
-<p><em>Intuitive controls for configuring PDF combination settings</em></p>
+*Clean, modern interface for uploading and managing PDF files* | *Intuitive controls for configuring PDF combination settings*
+
+### Mobile Experience
+<img src="public/showcase-mobile.png" alt="1PDF Mobile Interface" width="800">
+<p><em>Responsive design optimized for mobile devices and touch interactions</em></p>
 
 </div>
 
