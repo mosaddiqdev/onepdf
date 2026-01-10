@@ -84,9 +84,9 @@ export const funFacts = [
   "PDF files can contain embedded weather widgets and live data feeds.",
   "Some PDFs include augmented reality markers for mobile app integration.",
   "The PDF format supports custom scripting languages for advanced automation.",
-  "PDF files can be created with automatic translation capabilities for multiple languages."
-]
+  "PDF files can be created with automatic translation capabilities for multiple languages.",
+];
 
 export function getRandomFact(): string {
-  return funFacts[Math.floor(Math.random() * funFacts.length)]
+  return funFacts[Math.floor(Math.random() * funFacts.length)];
 }

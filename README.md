@@ -54,7 +54,7 @@
 <details>
 <summary><b>Core Features</b></summary>
 
-- 📄 **Smart PDF Combining** - Merge 3 pages per sheet
+- 📄 **Smart PDF Combining** - Merge 2, 3, 4, or 6 pages per sheet
 - 🎨 **Visual Customization** - Apply grayscale, color inversion, and background options
 - 🎯 **Quality Control** - Adjustable DPI settings (150-300 DPI) for perfect print quality
 - 🔄 **Drag & Drop Interface** - Intuitive file management with reordering capabilities
@@ -302,7 +302,8 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ### **Bug Reports & Community Feedback**
 
-- **[Raghav Sharma](https://github.com/raghav-sharma)** - Identified critical background processing issue where PDF combining would stop when switching browser tabs. This valuable feedback led to implementing a robust Web Worker + OffscreenCanvas architecture for uninterrupted background processing.
+- **[Raghav Sharma](https://github.com/#)** - Reported critical background processing bug that led to implementing Web Worker architecture for uninterrupted PDF processing.
+- **[Almas](https://github.com/#)** - Identified JPEG 2000 rendering issues with black/corrupted images, leading to implementation of proper WASM support for OpenJPEG decoding in PDF.js.
 
 <div align="center">
 

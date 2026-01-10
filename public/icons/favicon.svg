@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="1024" height="1024"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="1024" height="1024"><svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_2_2)">
-<rect width="1024" height="1024" rx="20" fill="#DC4C4C"></rect>
-<path d="M458.656 876V437.728H296.864V298.464H360.352C393.12 298.464 419.744 294.027 440.224 285.152C460.704 275.595 475.723 259.893 485.28 238.048C494.837 216.203 499.616 186.507 499.616 148.96H659.36V876H458.656Z" fill="white"></path>
+<rect width="1024" height="1024" fill="white"></rect>
+<path d="M458.656 876V437.728H296.864V298.464H360.352C393.12 298.464 419.744 294.027 440.224 285.152C460.704 275.595 475.723 259.893 485.28 238.048C494.837 216.203 499.616 186.507 499.616 148.96H659.36V876H458.656Z" fill="#DC4C4C"></path>
 </g>
 <defs>
 <clipPath id="clip0_2_2">
-<rect width="1024" height="1024" rx="20" fill="white"></rect>
+<rect width="1024" height="1024" fill="white"></rect>
 </clipPath>
 </defs>
 </svg></svg><style>@media (prefers-color-scheme: light) { :root { filter: none; } }

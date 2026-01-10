@@ -1,2 +1,2 @@
-export { PWAProvider } from './PWAProvider'
-export { InstallButton } from './InstallButton'
+export { PWAProvider } from "./PWAProvider";
+export { InstallButton } from "./InstallButton";

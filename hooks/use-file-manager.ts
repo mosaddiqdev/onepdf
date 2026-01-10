@@ -1,133 +1,139 @@
-'use client'
+"use client";
 
-import { useState, useCallback, useEffect } from 'react'
-import { getPDFPageCount, formatFileSize, generateId } from '@/lib/pdf-processor'
-import { validateFiles, formatValidationErrors, VALIDATION_LIMITS } from '@/lib/validation'
-
+import { useState, useCallback, useEffect } from "react";
+import { getPDFPageCount, formatFileSize, generateId } from "@/lib/pdf-processor";
+import { validateFiles, formatValidationErrors, VALIDATION_LIMITS } from "@/lib/validation";
 
 export function useFileManager() {
-  const [files, setFiles] = useState<PDFFile[]>([])
-  const [validationError, setValidationError] = useState<string>('')
+  const [files, setFiles] = useState<PDFFile[]>([]);
+  const [validationError, setValidationError] = useState<string>("");
 
-  // Load files from global variable on mount (since File objects can't be serialized)
   useEffect(() => {
-    const uploadedFiles = (window as any).uploadedFiles
-    if (uploadedFiles && Array.isArray(uploadedFiles)) {
-      setFiles(uploadedFiles)
-        // Clear the global variable
-        ; (window as any).uploadedFiles = null
+    if (typeof window !== "undefined") {
+      const uploadedFiles = window.uploadedFiles;
+      if (uploadedFiles && Array.isArray(uploadedFiles)) {
+        setFiles(uploadedFiles);
+        window.uploadedFiles = [];
+      }
     }
-  }, [])
+  }, []);
 
-  const totalPages = files.reduce((sum, f) => sum + (f.pageCount || 0), 0)
+  const totalPages = files.reduce((sum, f) => sum + (f.pageCount || 0), 0);
 
-  const handleFilesAdded = useCallback(async (newFiles: File[]) => {
-    setValidationError('')
+  const handleFilesAdded = useCallback(
+    async (newFiles: File[]) => {
+      setValidationError("");
 
-    try {
-      // Validate new files
-      const validationErrors = await validateFiles(newFiles)
-      if (validationErrors.length > 0) {
-        setValidationError(formatValidationErrors(validationErrors))
-        return
-      }
+      try {
+        const validationErrors = await validateFiles(newFiles);
+        if (validationErrors.length > 0) {
+          setValidationError(formatValidationErrors(validationErrors));
+          return;
+        }
 
-      // Check if adding these files would exceed limits
-      const currentTotalSize = files.reduce((sum, f) => sum + f.size, 0)
-      const newTotalSize = newFiles.reduce((sum, f) => sum + f.size, 0)
+        const currentTotalSize = files.reduce((sum, f) => sum + f.size, 0);
+        const newTotalSize = newFiles.reduce((sum, f) => sum + f.size, 0);
 
-      if (currentTotalSize + newTotalSize > VALIDATION_LIMITS.MAX_TOTAL_SIZE) {
-        const totalMB = Math.round((currentTotalSize + newTotalSize) / (1024 * 1024))
-        const maxMB = Math.round(VALIDATION_LIMITS.MAX_TOTAL_SIZE / (1024 * 1024))
-        setValidationError(`Adding these files would exceed the ${maxMB}MB limit (total would be ${totalMB}MB).`)
-        return
-      }
+        if (currentTotalSize + newTotalSize > VALIDATION_LIMITS.MAX_TOTAL_SIZE) {
+          const totalMB = Math.round((currentTotalSize + newTotalSize) / (1024 * 1024));
+          const maxMB = Math.round(VALIDATION_LIMITS.MAX_TOTAL_SIZE / (1024 * 1024));
+          setValidationError(
+            `Adding these files would exceed the ${maxMB}MB limit (total would be ${totalMB}MB).`
+          );
+          return;
+        }
 
-      if (files.length + newFiles.length > VALIDATION_LIMITS.MAX_FILES) {
-        setValidationError(`Cannot add ${newFiles.length} files. Maximum ${VALIDATION_LIMITS.MAX_FILES} files allowed (currently have ${files.length}).`)
-        return
-      }
+        if (files.length + newFiles.length > VALIDATION_LIMITS.MAX_FILES) {
+          setValidationError(
+            `Cannot add ${newFiles.length} files. Maximum ${VALIDATION_LIMITS.MAX_FILES} files allowed (currently have ${files.length}).`
+          );
+          return;
+        }
 
-      // Process valid files
-      const pdfFiles: PDFFile[] = await Promise.all(
-        newFiles.map(async (file) => {
-          let pageCount: number | undefined
-          try {
-            pageCount = await getPDFPageCount(file)
+        const pdfFiles: PDFFile[] = await Promise.all(
+          newFiles.map(async (file) => {
+            let pageCount: number | undefined;
+            try {
+              pageCount = await getPDFPageCount(file);
 
-            // Validate page count
-            if (pageCount && pageCount > VALIDATION_LIMITS.MAX_PAGES_PER_FILE) {
-              throw new Error(`File "${file.name}" has ${pageCount} pages. Maximum ${VALIDATION_LIMITS.MAX_PAGES_PER_FILE} pages per file allowed.`)
+              if (pageCount && pageCount > VALIDATION_LIMITS.MAX_PAGES_PER_FILE) {
+                throw new Error(
+                  `File "${file.name}" has ${pageCount} pages. Maximum ${VALIDATION_LIMITS.MAX_PAGES_PER_FILE} pages per file allowed.`
+                );
+              }
+            } catch (error) {
+              console.warn(`Failed to get page count for ${file.name}:`, error);
+              if (error instanceof Error && error.message.includes("Maximum")) {
+                throw error;
+              }
             }
-          } catch (error) {
-            console.warn(`Failed to get page count for ${file.name}:`, error)
-            // Continue processing without page count if extraction fails
-            if (error instanceof Error && error.message.includes('Maximum')) {
-              throw error // Re-throw validation errors
-            }
-          }
 
-          return {
-            id: generateId(),
-            file,
-            name: file.name,
-            size: file.size,
-            formattedSize: formatFileSize(file.size),
-            pageCount,
-          }
-        })
-      )
+            return {
+              id: generateId(),
+              file,
+              name: file.name,
+              size: file.size,
+              formattedSize: formatFileSize(file.size),
+              pageCount,
+            };
+          })
+        );
 
-      // Check total pages after adding
-      const newTotalPages = totalPages + pdfFiles.reduce((sum, f) => sum + (f.pageCount || 0), 0)
-      if (newTotalPages > VALIDATION_LIMITS.MAX_TOTAL_PAGES) {
-        setValidationError(`Adding these files would exceed the ${VALIDATION_LIMITS.MAX_TOTAL_PAGES} page limit (total would be ${newTotalPages} pages).`)
-        return
+        const newTotalPages = totalPages + pdfFiles.reduce((sum, f) => sum + (f.pageCount || 0), 0);
+        if (newTotalPages > VALIDATION_LIMITS.MAX_TOTAL_PAGES) {
+          setValidationError(
+            `Adding these files would exceed the ${VALIDATION_LIMITS.MAX_TOTAL_PAGES} page limit (total would be ${newTotalPages} pages).`
+          );
+          return;
+        }
+
+        setFiles((prev) => [...prev, ...pdfFiles]);
+      } catch (error) {
+        console.error("Error processing files:", error);
+        setValidationError(
+          error instanceof Error ? error.message : "Failed to process files. Please try again."
+        );
       }
-
-      setFiles(prev => [...prev, ...pdfFiles])
-    } catch (error) {
-      console.error('Error processing files:', error)
-      setValidationError(error instanceof Error ? error.message : 'Failed to process files. Please try again.')
-    }
-  }, [files, totalPages])
+    },
+    [files, totalPages]
+  );
 
   const addMoreFiles = useCallback(() => {
-    const input = document.createElement('input')
-    input.type = 'file'
-    input.multiple = true
-    input.accept = '.pdf'
+    const input = document.createElement("input");
+    input.type = "file";
+    input.multiple = true;
+    input.accept = ".pdf";
     input.onchange = (e) => {
-      const target = e.target as HTMLInputElement
+      const target = e.target as HTMLInputElement;
       if (target.files) {
-        handleFilesAdded(Array.from(target.files))
+        handleFilesAdded(Array.from(target.files));
       }
-    }
-    input.click()
-  }, [handleFilesAdded])
+    };
+    input.click();
+  }, [handleFilesAdded]);
 
   const removeFile = useCallback((id: string) => {
-    setFiles(prev => prev.filter(f => f.id !== id))
-    setValidationError('') // Clear validation error when removing files
-  }, [])
+    setFiles((prev) => prev.filter((f) => f.id !== id));
+    setValidationError("");
+  }, []);
 
   const reorderFiles = useCallback((oldIndex: number, newIndex: number) => {
-    setFiles(prev => {
-      const newFiles = [...prev]
-      const [removed] = newFiles.splice(oldIndex, 1)
-      newFiles.splice(newIndex, 0, removed)
-      return newFiles
-    })
-  }, [])
+    setFiles((prev) => {
+      const newFiles = [...prev];
+      const [removed] = newFiles.splice(oldIndex, 1);
+      newFiles.splice(newIndex, 0, removed);
+      return newFiles;
+    });
+  }, []);
 
   const resetFiles = useCallback(() => {
-    setFiles([])
-    setValidationError('')
-  }, [])
+    setFiles([]);
+    setValidationError("");
+  }, []);
 
   const clearValidationError = useCallback(() => {
-    setValidationError('')
-  }, [])
+    setValidationError("");
+  }, []);
 
   return {
     files,
@@ -140,5 +146,5 @@ export function useFileManager() {
     reorderFiles,
     resetFiles,
     clearValidationError,
-  }
+  };
 }

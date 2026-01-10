@@ -56,10 +56,7 @@ export function ProcessingContent({ state, currentFact, onCancel }: ProcessingCo
 
       <div className="pt-3 border-t border-border/50 space-y-3">
         <p className="text-xs text-muted-foreground text-center">
-          <Balancer>
-            Processing continues in background when you switch tabs. Large jobs may take 10-30
-            minutes.
-          </Balancer>
+          <Balancer>Feel free to switch tabs — we&apos;ll keep working in the background.</Balancer>
         </p>
         <Button
           variant="ghost"
