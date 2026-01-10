@@ -175,7 +175,10 @@ export function ProcessingResultModal({
             resultSize={resultSize}
             outputSheets={outputSheets}
             onCancel={onCancel}
-            onDownload={onDownload}
+            onDownload={() => {
+              onDownload()
+              onReset()
+            }}
             onReset={onReset}
           />
         </motion.div>

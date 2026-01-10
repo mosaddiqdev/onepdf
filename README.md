@@ -3,7 +3,7 @@
 <div align="center">
   <img src="public/web-app-manifest-512x512.png" alt="1PDF Logo" width="120" height="120">
   
-  **Combine PDF Pages • Save Paper • Save Money**
+  **Combine PDF Pages | Save Paper | Save Money**
   
   A modern web application for merging multiple PDF pages onto single sheets, built for students and professionals who want to optimize their printing.
 
