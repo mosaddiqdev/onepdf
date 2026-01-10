@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect, useRef } from 'react'
 import { processPDFs, downloadPDF, cancelProcessing as cancelWorker } from '@/lib/pdf-processor'
 import { validateSettings, validatePageCount, sanitizeFilename, formatValidationErrors } from '@/lib/validation'
 import { getRandomFact } from '@/lib/fun-facts'
+import { track } from '@vercel/analytics'
 import type { PDFFile, ProcessingSettings, ProcessingState } from '@/lib/types'
 
 const DEFAULT_SETTINGS: ProcessingSettings = {
@@ -122,16 +123,35 @@ export function useProcessing(files: PDFFile[]) {
     // Create new abort controller for this processing run
     abortControllerRef.current = new AbortController()
     const signal = abortControllerRef.current.signal
+    const startTime = Date.now()
     
     setState({ status: 'processing', progress: 0, message: 'Starting...' })
     setResult(null)
     
     try {
+      // Track processing start
+      track('pdf_processing_started', {
+        fileCount: files.length,
+        totalPages: totalPages,
+        pagesPerSheet: settings.pagesPerSheet,
+        dpi: settings.dpi,
+        grayscale: settings.grayscale,
+        invertColors: settings.invertColors
+      })
+
       const res = await processPDFs(files, settings, (progress, message) => {
         setState({ status: 'processing', progress, message })
       }, signal)
       setResult(res)
       setState({ status: 'complete', progress: 100, message: 'Done!' })
+      
+      // Track successful completion
+      track('pdf_processing_completed', {
+        fileCount: files.length,
+        totalPages: totalPages,
+        outputSheets: Math.ceil(totalPages / settings.pagesPerSheet),
+        processingTime: Date.now() - startTime
+      })
     } catch (e) {
       // Don't show error if cancelled
       if (e instanceof Error && e.message === 'Cancelled') {
@@ -150,6 +170,11 @@ export function useProcessing(files: PDFFile[]) {
 
   const handleDownload = useCallback(() => {
     if (result) {
+      // Track download
+      track('pdf_download', {
+        filename: settings.filename,
+        fileSize: result.length
+      })
       downloadPDF(result, settings.filename)
     }
   }, [result, settings.filename])

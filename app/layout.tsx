@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Figtree } from "next/font/google";
 import { PWAProvider } from "@/components/pwa/PWAProvider";
 import { SerwistProvider } from "./serwist";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { Analytics } from '@vercel/analytics/react';
 import "./globals.css";
 
 const figtree = Figtree({ subsets: ['latin'], variable: '--font-sans' });
@@ -109,6 +110,7 @@ export default function RootLayout({
             </PWAProvider>
           </SerwistProvider>
         </ErrorBoundary>
+        <Analytics />
       </body>
     </html>
   );
