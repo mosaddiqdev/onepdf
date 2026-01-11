@@ -20,12 +20,13 @@ export default function CombinePage() {
   const router = useRouter();
   const {
     files,
-    setFiles,
     totalPages,
     validationError,
     handleFilesAdded,
     addMoreFiles,
     removeFile,
+    resetFiles,
+    setFilesDirectly,
     clearValidationError,
   } = useFileManager();
 
@@ -59,12 +60,12 @@ export default function CombinePage() {
   }, [isProcessing, result]);
 
   const handleReorderFiles = (newFiles: typeof files) => {
-    setFiles(newFiles);
+    setFilesDirectly(newFiles);
   };
 
   const handleReset = () => {
     reset();
-    setFiles([]);
+    resetFiles();
   };
 
   return (

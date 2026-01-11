@@ -1,7 +1,11 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import { processPDFs, downloadPDF, cancelProcessing as cancelWorker } from "@/lib/pdf-processor";
+import {
+  processPDFs,
+  downloadPDF,
+  cancelProcessing as cancelWorker,
+} from "@/lib/pdf-processor";
 import {
   validateSettings,
   validatePageCount,
@@ -42,7 +46,10 @@ const saveSettings = (settings: ProcessingSettings) => {
 
   try {
     const { ...settingsToSave } = settings;
-    localStorage.setItem("pdf-processing-settings", JSON.stringify(settingsToSave));
+    localStorage.setItem(
+      "pdf-processing-settings",
+      JSON.stringify(settingsToSave)
+    );
   } catch (error) {
     console.warn("Failed to save settings to localStorage:", error);
   }
@@ -93,7 +100,8 @@ const clearProcessingState = () => {
 };
 
 export function useProcessing(files: PDFFile[]) {
-  const [settings, setSettings] = useState<ProcessingSettings>(DEFAULT_SETTINGS);
+  const [settings, setSettings] =
+    useState<ProcessingSettings>(DEFAULT_SETTINGS);
   const [state, setState] = useState<EnhancedProcessingState>({
     status: "idle",
     progress: 0,
@@ -113,12 +121,16 @@ export function useProcessing(files: PDFFile[]) {
   const lastNotificationTime = useRef<number>(0);
   const isBackgroundRef = useRef<boolean>(false);
 
-  const { notifyProcessingComplete, notifyProcessingError, notifyLongProcessing } =
-    useBackgroundNotifications();
+  const {
+    notifyProcessingComplete,
+    notifyProcessingError,
+    notifyLongProcessing,
+  } = useBackgroundNotifications();
 
   const isProcessing = state.status === "processing";
   const outputSheets = Math.ceil(
-    files.reduce((sum, f) => sum + (f.pageCount || 0), 0) / settings.pagesPerSheet
+    files.reduce((sum, f) => sum + (f.pageCount || 0), 0) /
+      settings.pagesPerSheet
   );
 
   useEffect(() => {
@@ -140,7 +152,6 @@ export function useProcessing(files: PDFFile[]) {
               : prev.message + " (Running in background...)",
           }));
         } else {
-          console.log("Tab visible again - switching to foreground mode");
           isBackgroundRef.current = false;
           setState((prev) => ({
             ...prev,
@@ -266,7 +277,10 @@ export function useProcessing(files: PDFFile[]) {
     }
 
     const totalPages = files.reduce((sum, f) => sum + (f.pageCount || 0), 0);
-    const pageCountError = validatePageCount(totalPages, settings.pagesPerSheet);
+    const pageCountError = validatePageCount(
+      totalPages,
+      settings.pagesPerSheet
+    );
     if (pageCountError) {
       setState({
         status: "error",
@@ -282,7 +296,6 @@ export function useProcessing(files: PDFFile[]) {
     }
 
     if (totalPages > 100) {
-      console.log(`Processing ${totalPages} pages - this may take 10-30 minutes`);
     }
 
     abortControllerRef.current = new AbortController();
@@ -308,14 +321,15 @@ export function useProcessing(files: PDFFile[]) {
           setState((prev) => ({
             ...prev,
             progress,
-            message: message + (prev.isBackground ? " (Running in background...)" : ""),
+            message:
+              message +
+              (prev.isBackground ? " (Running in background...)" : ""),
           }));
         },
         signal
       );
 
       const wasInBackground = isBackgroundRef.current;
-      console.log("[Processing] Completed! wasInBackground:", wasInBackground);
 
       setResult(res);
       setState((prev) => ({
@@ -328,11 +342,9 @@ export function useProcessing(files: PDFFile[]) {
       isBackgroundRef.current = false;
 
       if (wasInBackground && settings.enableNotifications) {
-        console.log("[Processing] Calling notifyProcessingComplete");
-        notifyProcessingComplete(settings.filename || "combined.pdf", outputSheets);
-      } else {
-        console.log(
-          "[Processing] Not calling notification - was not in background or notifications disabled"
+        notifyProcessingComplete(
+          settings.filename || "combined.pdf",
+          outputSheets
         );
       }
 
@@ -344,10 +356,11 @@ export function useProcessing(files: PDFFile[]) {
       }
       console.error("Processing error:", e);
       const errorMessage =
-        e instanceof Error ? e.message : "An unexpected error occurred during processing";
+        e instanceof Error
+          ? e.message
+          : "An unexpected error occurred during processing";
 
       const wasInBackground = isBackgroundRef.current;
-      console.log("[Processing] Error occurred! wasInBackground:", wasInBackground);
 
       setState({
         status: "error",

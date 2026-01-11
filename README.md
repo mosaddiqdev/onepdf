@@ -267,14 +267,17 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
 <table>
 <tr>
 <td align="center">
+<span>🐛</span>
 <h4>Bug Reports</h4>
 Found an issue? Let us know!
 </td>
 <td align="center">
+<span>💡</span>
 <h4>Feature Requests</h4>
 Have an idea? We'd love to hear it!
 </td>
 <td align="center">
+<span>🤝</span>
 <h4>Code Contributions</h4>
 Want to contribute code? Awesome!
 </td>

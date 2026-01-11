@@ -75,8 +75,8 @@ const getA4Dimensions = (dpi: number) => ({
   height: Math.round((297 * dpi) / 25.4),
 });
 
-const PADDING = 40;
-const GAP = 24;
+const PADDING = 20;
+const GAP = 12;
 const A4_WIDTH_PT = 595.28;
 const A4_HEIGHT_PT = 841.89;
 
@@ -120,7 +120,11 @@ async function renderPageToOffscreenCanvas(
   return canvas;
 }
 
-function applyFilters(canvas: OffscreenCanvas, grayscale: boolean, invert: boolean): void {
+function applyFilters(
+  canvas: OffscreenCanvas,
+  grayscale: boolean,
+  invert: boolean
+): void {
   if (!grayscale && !invert) return;
 
   const ctx = canvas.getContext("2d")!;
@@ -162,7 +166,8 @@ async function processFiles(
   pageCounts: number[],
   settings: ProcessingSettings
 ): Promise<Uint8Array> {
-  const { pagesPerSheet, dpi, grayscale, invertColors, blackBackground } = settings;
+  const { pagesPerSheet, dpi, grayscale, invertColors, blackBackground } =
+    settings;
 
   const { width: A4_WIDTH_PX, height: A4_HEIGHT_PX } = getA4Dimensions(dpi);
 
@@ -236,7 +241,12 @@ async function processFiles(
         });
 
         try {
-          const canvas = await renderPageToOffscreenCanvas(pdfDoc, pageNum, slotWidth, slotHeight);
+          const canvas = await renderPageToOffscreenCanvas(
+            pdfDoc,
+            pageNum,
+            slotWidth,
+            slotHeight
+          );
 
           if (grayscale || invertColors) {
             applyFilters(canvas, grayscale, invertColors);
@@ -244,7 +254,10 @@ async function processFiles(
 
           pageCanvases.push(canvas);
         } catch (error) {
-          console.error(`Error rendering page ${pageNum} of ${fileName}:`, error);
+          console.error(
+            `Error rendering page ${pageNum} of ${fileName}:`,
+            error
+          );
           if (error instanceof Error) {
             console.error("Error name:", error.name);
             console.error("Error message:", error.message);
@@ -260,7 +273,9 @@ async function processFiles(
     } catch (error) {
       console.error(`Error loading ${fileName}:`, error);
       throw new Error(
-        `Failed to load ${fileName}: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Failed to load ${fileName}: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
       );
     }
   }
@@ -367,7 +382,12 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
 
     try {
       const { files, fileNames, pageCounts, settings } = e.data;
-      const pdfBytes = await processFiles(files, fileNames, pageCounts, settings);
+      const pdfBytes = await processFiles(
+        files,
+        fileNames,
+        pageCounts,
+        settings
+      );
 
       if (shouldCancel) {
         respond({ type: "error", error: "Cancelled" });
