@@ -171,14 +171,17 @@ NEXT_PUBLIC_FILE_LOAD_TIMEOUT=60000
 <table>
 <tr>
 <td align="center" width="33%">
+<span>💻</span>
 <h4>Desktop</h4>
 Look for the install icon in your browser's address bar
 </td>
 <td align="center" width="33%">
+<span>📱</span>
 <h4>Mobile</h4>
 Use "Add to Home Screen" from your browser menu
 </td>
 <td align="center" width="33%">
+<span>🖥️</span>
 <h4>Automatic</h4>
 The app will prompt you to install after 30 seconds
 </td>
