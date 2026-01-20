@@ -270,6 +270,25 @@ export function useProcessing(files: PDFFile[]) {
     };
   }, [isProcessing]);
 
+  // Dynamic Tab Title
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    if (state.status === "processing") {
+      document.title = `(${Math.round(state.progress)}%) Combining...`;
+    } else if (state.status === "complete") {
+      document.title = "(Done!) 1PDF";
+    } else if (state.status === "error") {
+      document.title = "(Error) 1PDF";
+    } else {
+      document.title = "Combine | 1PDF";
+    }
+
+    return () => {
+      document.title = "Combine | 1PDF";
+    };
+  }, [state.status, state.progress]);
+
   const updateFilename = useCallback((filename: string) => {
     setSettings((prev) => ({ ...prev, filename }));
   }, []);

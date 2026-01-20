@@ -58,6 +58,27 @@ export default function CombinePage() {
       document.body.classList.remove("modal-open");
     };
   }, [isProcessing, result]);
+  
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        if (!isProcessing && !result && files.length > 0) {
+          process();
+        }
+      }
+
+      if (e.key === "Escape") {
+        if (isProcessing) {
+          cancelProcessing();
+        } else if (result) {
+          handleReset();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [files.length, isProcessing, result, process, cancelProcessing]);
 
   const handleReorderFiles = (newFiles: typeof files) => {
     setFilesDirectly(newFiles);

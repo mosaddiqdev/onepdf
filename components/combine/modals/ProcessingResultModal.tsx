@@ -1,11 +1,13 @@
 "use client";
 
 import { motion, AnimatePresence, LayoutGroup } from "motion/react";
+import confetti from "canvas-confetti";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Drawer, DrawerContent, DrawerTitle, DrawerDescription } from "@/components/ui/drawer";
 import { ProcessingContent } from "./ProcessingContent";
 import { ResultContent } from "./ResultContent";
 import { useMobile } from "@/hooks/use-mobile";
+import { useEffect } from "react";
 
 interface ProcessingResultModalProps {
   isOpen: boolean;
@@ -33,6 +35,39 @@ export function ProcessingResultModal({
   onReset,
 }: ProcessingResultModalProps) {
   const isMobile = useMobile();
+
+  useEffect(() => {
+    if (isComplete && isOpen) {
+      const duration = 2000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 60 };
+
+      const randomInRange = (min: number, max: number) =>
+        Math.random() * (max - min) + min;
+
+      const interval: any = setInterval(function () {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+        confetti({
+          ...defaults,
+          particleCount,
+          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+        });
+        confetti({
+          ...defaults,
+          particleCount,
+          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+        });
+      }, 250);
+      
+      return () => clearInterval(interval);
+    }
+  }, [isComplete, isOpen]);
 
   if (isMobile === null || !isOpen) return null;
 
