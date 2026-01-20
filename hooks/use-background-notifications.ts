@@ -12,7 +12,10 @@ export function useBackgroundNotifications() {
 
   useEffect(() => {
     if (typeof window !== "undefined" && "Notification" in window) {
-      if (Notification.permission !== "denied" && Notification.permission !== "granted") {
+      if (
+        Notification.permission !== "denied" &&
+        Notification.permission !== "granted"
+      ) {
         Notification.requestPermission().then((permission) => {
           setPermissionGranted(permission === "granted");
         });

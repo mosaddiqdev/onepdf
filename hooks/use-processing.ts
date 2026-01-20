@@ -14,6 +14,7 @@ import {
 } from "@/lib/validation";
 import { getRandomFact } from "@/lib/fun-facts";
 import { useBackgroundNotifications } from "./use-background-notifications";
+import { useWakeLock } from "./use-wake-lock";
 
 const DEFAULT_SETTINGS: ProcessingSettings = {
   filename: "",
@@ -126,6 +127,8 @@ export function useProcessing(files: PDFFile[]) {
     notifyProcessingError,
     notifyLongProcessing,
   } = useBackgroundNotifications();
+
+  useWakeLock(state.status === "processing");
 
   const isProcessing = state.status === "processing";
   const outputSheets = Math.ceil(
@@ -250,6 +253,22 @@ export function useProcessing(files: PDFFile[]) {
     state.estimatedTimeRemaining,
     notifyLongProcessing,
   ]);
+
+  useEffect(() => {
+    if (!isProcessing) return;
+
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      // Included for legacy support, e.g. Chrome/Edge < 119
+      e.returnValue = true;
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isProcessing]);
 
   const updateFilename = useCallback((filename: string) => {
     setSettings((prev) => ({ ...prev, filename }));
