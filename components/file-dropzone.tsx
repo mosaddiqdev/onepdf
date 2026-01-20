@@ -105,7 +105,8 @@ export function FileDropzone({ onFilesAdded, disabled = false }: FileDropzonePro
               isDragging ? "text-primary" : "text-foreground"
             )}
           >
-            {isDragging ? "Drop to upload" : "Drop your PDFs here"}
+            {isDragging ? "Drop to upload" : <span className="hidden sm:inline">Drop your PDFs here</span>}
+            {!isDragging && <span className="sm:hidden">Tap to Select Files</span>}
           </h3>
           <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
             or <span className="font-medium text-primary">browse files</span> from your device

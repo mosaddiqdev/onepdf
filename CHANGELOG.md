@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Accidental Data Loss Prevention**: Added safety check (tab close confirmation) when processing is active.
 - **Screen Wake Lock**: Implemented `useWakeLock` hook to prevent device sleep during long PDF processing tasks.
+- **Dynamic Tab Title**: Show real-time progress percentage in the browser tab title.
+- **Keyboard Shortcuts**: Added `Ctrl/Cmd + Enter` to start processing and `Esc` to cancel/close modals.
+- **Success Confetti**: Added premium confetti micro-interaction upon successful processing.
+- **System Dark Mode**: Added `next-themes` support for automatic system theme detection (Light/Dark).
+- **Mobile Optimizations**: Improved touch targets and added clear "Tap to Select" instructions for mobile users.
 
 ### Fixed
 
