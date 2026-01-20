@@ -76,7 +76,7 @@ export function SortableFileItem({
       <button
         onClick={() => onRemove(file.id)}
         disabled={isProcessing}
-        className="shrink-0 p-3 text-muted-foreground hover:text-destructive hover:bg-destructive/10 active:bg-destructive/20 rounded-md transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
+        className="shrink-0 p-3 sm:p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 active:bg-destructive/20 rounded-md transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
         aria-label="Remove file"
       >
         <svg
